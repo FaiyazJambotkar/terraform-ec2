@@ -1,18 +1,26 @@
 pipeline [
     agent any
 
-    tool name: 'terraform-11', type: 'terraform'
+    tools {
+    terraform 'terraform-11'
+    }
 
     stages {
         stage("git checkout") {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/FaiyazJambotkar/terraform-ec2']])
+                git branch: 'main', url: 'https://github.com/FaiyazJambotkar/terraform-ec2.git'
             }
         }
 
         stage("terraform init") {
             steps {
-                sh ("terraform init");
+                sh 'terraform init'
+            }
+        }
+
+        stage("terraform apply") {
+            steps { 
+                sh 'terraform apply --auto-approve'
             }
         }
     }
